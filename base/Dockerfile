@@ -38,8 +38,8 @@ COPY --from=lib ${PREFIX_DIR}/lib ${PREFIX_DIR}/lib
 COPY --from=lib ${PREFIX_DIR}/bin/ldd ${PREFIX_DIR}/bin/ldd
 COPY --from=lib ${PREFIX_DIR}/bin/locale ${PREFIX_DIR}/bin/locale
 COPY --from=lib ${PREFIX_DIR}/sbin/ldconfig ${PREFIX_DIR}/sbin/ldconfig
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
-    echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" > /etc/nsswitch.conf && \
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+RUN echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" > /etc/nsswitch.conf && \
     mkdir -p /lib64 ${PREFIX_DIR}/lib64 ${PREFIX_DIR}/etc ${PREFIX_DIR}/share/locale ${PREFIX_DIR}/share/i18n/charmaps && \
     ln -s ${PREFIX_DIR}/lib/ld-linux-x86-64.so.2 ${PREFIX_DIR}/lib64/ld-linux-x86-64.so.2 && \
     ln -s ${PREFIX_DIR}/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
