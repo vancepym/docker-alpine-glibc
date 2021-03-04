@@ -1,4 +1,4 @@
-ARG GLIBC_VERSION=2.32
+ARG GLIBC_VERSION=2.33
 ARG PREFIX_DIR=/usr/lib/glibc
 
 
@@ -18,7 +18,7 @@ FROM builder AS lib
 ARG GLIBC_VERSION
 ARG PREFIX_DIR
 RUN mkdir -p /glibc-build && cd /glibc-build && \
-    /glibc-${GLIBC_VERSION}/configure CFLAGS="-Os" CXXFLAGS="-Os" \
+    /glibc-${GLIBC_VERSION}/configure CFLAGS="-Os -Wno-maybe-uninitialized" CXXFLAGS="-Os -Wno-maybe-uninitialized" \
         --prefix="${PREFIX_DIR}" \
         --enable-stack-protector=strong && \
     make && make install

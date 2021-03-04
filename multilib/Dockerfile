@@ -1,4 +1,4 @@
-ARG GLIBC_VERSION=2.32
+ARG GLIBC_VERSION=2.33
 ARG PREFIX_DIR=/usr/lib/glibc
 
 
@@ -18,7 +18,7 @@ FROM builder AS lib
 ARG GLIBC_VERSION
 ARG PREFIX_DIR
 RUN mkdir -p /glibc-build && cd /glibc-build && \
-    /glibc-${GLIBC_VERSION}/configure CFLAGS="-Os" CXXFLAGS="-Os" \
+    /glibc-${GLIBC_VERSION}/configure CFLAGS="-Os -Wno-maybe-uninitialized" CXXFLAGS="-Os -Wno-maybe-uninitialized" \
         --prefix="${PREFIX_DIR}" \
         --enable-stack-protector=strong && \
     make && make install
@@ -31,7 +31,7 @@ ARG GLIBC_VERSION
 ARG PREFIX_DIR
 RUN apt-get -y install gcc-multilib g++-multilib
 RUN mkdir -p /glibc-build && cd /glibc-build && \
-    /glibc-${GLIBC_VERSION}/configure BUILD_CC='gcc' CC='gcc -m32' CXX='g++ -m32' CFLAGS="-Os" CXXFLAGS="-Os" \
+    /glibc-${GLIBC_VERSION}/configure BUILD_CC='gcc' CC='gcc -m32' CXX='g++ -m32' CFLAGS="-Os -Wno-maybe-uninitialized" CXXFLAGS="-Os -Wno-maybe-uninitialized" \
         --host=i686-linux-gnu \
         --prefix="${PREFIX_DIR}" \
         --enable-stack-protector=strong && \
@@ -47,7 +47,7 @@ ARG GLIBC_VERSION
 ARG PREFIX_DIR
 RUN apt-get -y install gcc-multilib g++-multilib
 RUN mkdir -p /glibc-build && cd /glibc-build && \
-    /glibc-${GLIBC_VERSION}/configure BUILD_CC='gcc' CC='gcc -m64' CXX='g++ -m64' CFLAGS="-Os" CXXFLAGS="-Os" \
+    /glibc-${GLIBC_VERSION}/configure BUILD_CC='gcc' CC='gcc -m64' CXX='g++ -m64' CFLAGS="-Os -Wno-maybe-uninitialized" CXXFLAGS="-Os -Wno-maybe-uninitialized" \
         --prefix="${PREFIX_DIR}" \
         --enable-stack-protector=strong && \
     make && make install
@@ -62,7 +62,7 @@ ARG GLIBC_VERSION
 ARG PREFIX_DIR
 RUN apt-get -y install gcc-multilib g++-multilib
 RUN mkdir -p /glibc-build && cd /glibc-build && \
-    /glibc-${GLIBC_VERSION}/configure BUILD_CC='gcc' CC='gcc -mx32' CXX='g++ -mx32' CFLAGS="-Os" CXXFLAGS="-Os" \
+    /glibc-${GLIBC_VERSION}/configure BUILD_CC='gcc' CC='gcc -mx32' CXX='g++ -mx32' CFLAGS="-Os -Wno-maybe-uninitialized" CXXFLAGS="-Os -Wno-maybe-uninitialized" \
         --prefix="${PREFIX_DIR}" \
         --enable-stack-protector=strong && \
     make && make install
