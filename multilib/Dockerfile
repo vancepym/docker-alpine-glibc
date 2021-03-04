@@ -72,7 +72,7 @@ RUN rm -rf ${PREFIX_DIR}/lib/audit && \
     rm -rf ${PREFIX_DIR}/lib/*.o
 
 
-FROM alpine:3.12 AS prebuilt
+FROM alpine:3.13.2 AS prebuilt
 ARG PREFIX_DIR
 COPY aliases.sh /etc/profile.d/
 COPY --from=lib32  ${PREFIX_DIR}/lib ${PREFIX_DIR}/lib32
@@ -97,7 +97,7 @@ RUN echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" > /etc/nsswitc
     ${PREFIX_DIR}/sbin/ldconfig
 
 
-FROM alpine:3.12
+FROM alpine:3.13.2
 ARG PREFIX_DIR
 ENV LANG=C.UTF-8
 COPY --from=prebuilt /lib32 /lib32
