@@ -30,7 +30,7 @@ RUN rm -rf ${PREFIX_DIR}/lib/audit && \
     rm -rf ${PREFIX_DIR}/lib/*.o
 
 
-FROM alpine:3.13.2
+FROM alpine:3.14.0
 ARG PREFIX_DIR
 ENV LANG=C.UTF-8
 COPY aliases.sh /etc/profile.d/
