@@ -1,8 +1,8 @@
-ARG GLIBC_VERSION=2.33
+ARG GLIBC_VERSION=2.37
 ARG PREFIX_DIR=/usr/lib/glibc
 
 
-FROM ubuntu:20.04 AS builder
+FROM ubuntu:22.04 AS builder
 ARG GLIBC_VERSION
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
@@ -72,7 +72,7 @@ RUN rm -rf ${PREFIX_DIR}/lib/audit && \
     rm -rf ${PREFIX_DIR}/lib/*.o
 
 
-FROM alpine:3.14.0 AS prebuilt
+FROM alpine:3.17.2 AS prebuilt
 ARG PREFIX_DIR
 COPY aliases.sh /etc/profile.d/
 COPY --from=lib32  ${PREFIX_DIR}/lib ${PREFIX_DIR}/lib32
@@ -97,7 +97,7 @@ RUN echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" > /etc/nsswitc
     ${PREFIX_DIR}/sbin/ldconfig
 
 
-FROM alpine:3.14.0
+FROM alpine:3.17.2
 ARG PREFIX_DIR
 ENV LANG=C.UTF-8
 COPY --from=prebuilt /lib32 /lib32

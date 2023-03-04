@@ -1,5 +1,5 @@
 NAME = vancepym/alpine-glibc
-VERSION = alpine-3.13
+VERSION = alpine-3.17
 
 .PHONY: all build force
 

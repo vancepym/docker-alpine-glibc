@@ -1,5 +1,5 @@
 NAME = vancepym/alpine-glibc
-VERSION = alpine-3.13-multilib
+VERSION = alpine-3.17-multilib
 
 .PHONY: all build force
 
