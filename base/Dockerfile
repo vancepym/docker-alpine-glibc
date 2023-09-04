@@ -1,4 +1,4 @@
-ARG GLIBC_VERSION=2.37
+ARG GLIBC_VERSION=2.38
 ARG PREFIX_DIR=/usr/lib/glibc
 
 
@@ -30,7 +30,7 @@ RUN rm -rf ${PREFIX_DIR}/lib/audit && \
     rm -rf ${PREFIX_DIR}/lib/*.o
 
 
-FROM alpine:3.17.2
+FROM alpine:3.18.3
 ARG PREFIX_DIR
 ENV LANG=C.UTF-8
 COPY aliases.sh /etc/profile.d/

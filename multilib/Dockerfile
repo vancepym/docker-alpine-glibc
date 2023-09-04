@@ -1,4 +1,4 @@
-ARG GLIBC_VERSION=2.37
+ARG GLIBC_VERSION=2.38
 ARG PREFIX_DIR=/usr/lib/glibc
 
 
@@ -97,7 +97,7 @@ RUN echo "hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4" > /etc/nsswitc
     ${PREFIX_DIR}/sbin/ldconfig
 
 
-FROM alpine:3.17.2
+FROM alpine:3.18.3
 ARG PREFIX_DIR
 ENV LANG=C.UTF-8
 COPY --from=prebuilt /lib32 /lib32
