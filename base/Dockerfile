@@ -1,22 +1,29 @@
-ARG GLIBC_VERSION=2.38
+ARG GLIBC_VERSION=2.41
 ARG PREFIX_DIR=/usr/lib/glibc
 
-
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:noble-20250714 AS builder
 ARG GLIBC_VERSION
-ENV DEBIAN_FRONTEND noninteractive
-ENV DEBCONF_NONINTERACTIVE_SEEN true
-RUN echo "Acquire::Retries \"3\";" | tee -a /etc/apt/apt.conf
-RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
-    sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
-RUN apt-get -q update && apt-get -y upgrade
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+RUN echo 'Acquire::Retries "5";' > /etc/apt/apt.conf.d/99retry
+RUN apt-get -q update && apt-get -y upgrade && apt-get -y install ca-certificates apt-transport-https
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list.d/ubuntu.sources && \
+    sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list.d/ubuntu.sources && \
+    sed -i 's/http:/https:/g' /etc/apt/sources.list.d/ubuntu.sources
+
+ARG TZ=Asia/Shanghai
+RUN apt-get -q update && apt-get -y upgrade && \
+    ln -sfv /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    apt-get -y install tzdata
+
 RUN apt-get -y install bison build-essential gawk gettext openssl python3 texinfo wget
 RUN wget -qO- "https://ftpmirror.gnu.org/libc/glibc-${GLIBC_VERSION}.tar.gz" | tar zxf -
-
 
 FROM builder AS lib
 ARG GLIBC_VERSION
 ARG PREFIX_DIR
+
 RUN mkdir -p /glibc-build && cd /glibc-build && \
     /glibc-${GLIBC_VERSION}/configure CFLAGS="-Os -Wno-maybe-uninitialized" CXXFLAGS="-Os -Wno-maybe-uninitialized" \
         --prefix="${PREFIX_DIR}" \
@@ -29,9 +36,9 @@ RUN rm -rf ${PREFIX_DIR}/lib/audit && \
     rm -rf ${PREFIX_DIR}/lib/*.a && \
     rm -rf ${PREFIX_DIR}/lib/*.o
 
-
-FROM alpine:3.18.3
+FROM alpine:3.22.1
 ARG PREFIX_DIR
+
 ENV LANG=C.UTF-8
 COPY aliases.sh /etc/profile.d/
 COPY --from=lib ${PREFIX_DIR}/lib ${PREFIX_DIR}/lib
